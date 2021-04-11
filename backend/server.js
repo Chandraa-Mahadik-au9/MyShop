@@ -1,9 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
+import path from "path";
 import connectDB from "./config/db.js";
+import morgan from "morgan";
+import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 import productRoutes from "./routes/productRoutes.js";
-import userRoutes from './routes/userRoutes.js';
+import userRoutes from "./routes/userRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 dotenv.config();
 
@@ -11,16 +16,30 @@ connectDB();
 
 const app = express();
 
+if (process.env.NODE_ENV === "developement") {
+  app.use(morgan("dev"));
+}
+
 app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("api/upload", uploadRoutes);
 
 app.get("/", (req, res) => {
-  res.send("API running successfully :).");
+  res.send("Api is succesfully running.");
 });
+
+app.get("/api/config/paypal", (req, res) =>
+  res.send(process.env.PAYPAL_CLIENT_ID)
+);
+
+// app.use(notFound);
+
+app.use(errorHandler);
 
 app.listen(PORT, (err) => {
   if (err) throw err;
