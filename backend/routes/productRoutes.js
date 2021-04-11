@@ -12,6 +12,7 @@ import {
 import { protect, forAdmin } from "../middlewares/authMiddlewares.js";
 
 router.route("/").get(getProducts).post(protect, forAdmin, createProduct);
+router.route("/").get(getProducts).post(protect, createProduct);
 router.get('/trending', getTrendingProducts)
 router.route("/:id/reviews").post(protect, createProductReview);
 router

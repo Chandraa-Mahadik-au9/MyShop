@@ -33,7 +33,9 @@ const protect = asyncHandler(async (req, res, next) => {
 });
 
 const forAdmin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  if (req.user && (req.user.isAdmin)) {
+    next();
+  } else if (req.user && (req.user.isMerchant)) {
     next();
   } else {
     res.status(401).json({
@@ -42,14 +44,14 @@ const forAdmin = (req, res, next) => {
   }
 };
 
-const forMerchant = (req, res, next) => {
-  if (req.user && req.user.isMerchant) {
-    next();
-  } else {
-    res.status(401).json({
-      message: "Not authorized as Merchant.",
-    });
-  }
-};
+// const forMerchant = (req, res, next) => {
+//   if (req.user && req.user.isMerchant) {
+//     next();
+//   } else {
+//     res.status(401).json({
+//       message: "Not authorized as Merchant.",
+//     });
+//   }
+// };
 
-export { protect, forAdmin, forMerchant };
+export { protect, forAdmin };
