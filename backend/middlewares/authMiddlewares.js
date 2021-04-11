@@ -42,4 +42,14 @@ const forAdmin = (req, res, next) => {
   }
 };
 
-export { protect, forAdmin };
+const forMerchant = (req, res, next) => {
+  if (req.user && req.user.isMerchant) {
+    next();
+  } else {
+    res.status(401).json({
+      message: "Not authorized as Merchant.",
+    });
+  }
+};
+
+export { protect, forAdmin, forMerchant };
